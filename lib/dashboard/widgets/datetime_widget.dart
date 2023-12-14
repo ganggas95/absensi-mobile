@@ -1,0 +1,52 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+class DateTimeWidget extends ConsumerStatefulWidget {
+  const DateTimeWidget({super.key});
+
+  @override
+  ConsumerState<DateTimeWidget> createState() => _DateTimeWidgetState();
+}
+
+class _DateTimeWidgetState extends ConsumerState<DateTimeWidget> {
+  String _currentTime = '';
+  String _currentDate = '';
+
+  late Timer timer;
+
+  @override
+  void initState() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final DateTime now = DateTime.now();
+      setState(() {
+        _currentTime = DateFormat().addPattern('HH:MM:ss').format(now);
+        _currentDate = DateFormat.yMMMMEEEEd().format(now);
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      textBaseline: TextBaseline.ideographic,
+      children: [
+        Text(_currentTime,
+            style: const TextStyle(fontSize: 24, color: Colors.white)),
+        Text(_currentDate,
+            style: const TextStyle(fontSize: 14, color: Colors.white)),
+      ],
+    );
+  }
+}
