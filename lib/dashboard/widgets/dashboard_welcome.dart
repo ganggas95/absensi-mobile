@@ -16,13 +16,17 @@ class _DashboardWelcomeWidgetState
   @override
   Widget build(BuildContext context) {
     final User? user = ref.watch(settingsProviders).user;
-    String welcomeText = 'Selamat Datang';
-    // print(user);
-    if (user != null) {
-      welcomeText += ', ${user.username}';
-    }
-    return Text(welcomeText,
-        style: const TextStyle(
-            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white));
+    return Column(
+      children: [
+        const Text("Selamat Datang",
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
+        user != null
+            ? Text(user.username!, style: const TextStyle(color: Colors.white))
+            : const SizedBox()
+      ],
+    );
   }
 }

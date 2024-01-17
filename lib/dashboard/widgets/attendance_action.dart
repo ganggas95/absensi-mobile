@@ -1,17 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:sitampan_mobile/dashboard/dto/attendance_dto.dart';
+import 'package:sitampan_mobile/dashboard/providers/dashboard_providers.dart';
+import 'package:sitampan_mobile/location/providers/location_providers.dart';
 
-class AttendanceActionWidget extends StatefulWidget {
+class AttendanceActionWidget extends ConsumerStatefulWidget {
   const AttendanceActionWidget({super.key});
 
   @override
-  State<AttendanceActionWidget> createState() => _AttendanceActionWidgetState();
+  ConsumerState<AttendanceActionWidget> createState() =>
+      _AttendanceActionWidgetState();
 }
 
-class _AttendanceActionWidgetState extends State<AttendanceActionWidget> {
+class _AttendanceActionWidgetState
+    extends ConsumerState<AttendanceActionWidget> {
+  bool isCoordinateInsideRadius(double latitude, double longitude,
+      double radius, double targetLatitude, double targetLongitude) {
+    double distance = Geolocator.distanceBetween(
+        latitude, longitude, targetLatitude, targetLongitude);
+    return distance <= radius;
+  }
+
+  void onTabAttend() {
+    final myCoordinate = ref.watch(locationProviders).myCoordinate;
+    final myLocationWithinOfficeLocation =
+        ref.watch(locationProviders.notifier).myLocationWithinOfficeLocation;
+    if (myLocationWithinOfficeLocation) {
+      ref.read(dashboardProviders.notifier).sendAttendance(CreateAttendanceDTO(
+          lat: myCoordinate!.latitude, lng: myCoordinate.longitude));
+    } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Lokasi Anda diluar area kerja"),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onTabAttend,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 28),
         clipBehavior: Clip.hardEdge,

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sitampan_mobile/profile/models/group.dart';
+import 'package:sitampan_mobile/profile/models/organizations/opd.dart';
+import 'package:sitampan_mobile/profile/models/organizations/unit_kerja.dart';
 
 part 'user.g.dart';
 
@@ -35,9 +37,9 @@ class User {
   // @JsonKey(name: 'login_from')
   final dynamic loginFrom;
   // @JsonKey(name: 'opd')
-  final dynamic opd;
+  final Opd? opd;
   // @JsonKey(name: 'unit')
-  final dynamic unit;
+  final UnitKerja? unit;
   // @JsonKey(name: 'update')
   final bool? update;
   // @JsonKey(name: 'updated_at')
@@ -90,7 +92,7 @@ class User {
     bool? isSuperAdmin,
     DateTime? lastLogin,
     dynamic loginFrom,
-    dynamic opd,
+    Opd? opd,
     dynamic unit,
     bool? update,
     DateTime? updatedAt,

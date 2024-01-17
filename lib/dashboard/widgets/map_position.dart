@@ -1,19 +1,23 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sitampan_mobile/location/providers/location_providers.dart';
 import 'package:sitampan_mobile/misc/tile_providers.dart';
+import 'package:sitampan_mobile/providers/settings_providers.dart';
 
-class MapPositionWidget extends StatefulWidget {
+class MapPositionWidget extends ConsumerStatefulWidget {
   const MapPositionWidget({super.key});
 
   @override
-  State<MapPositionWidget> createState() => _MapPositionWidgetState();
+  ConsumerState<MapPositionWidget> createState() => _MapPositionWidgetState();
 }
 
-class _MapPositionWidgetState extends State<MapPositionWidget> {
+class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
   final mapController = MapController();
   Position? position;
   String locationInfo = '';
@@ -38,22 +42,21 @@ class _MapPositionWidgetState extends State<MapPositionWidget> {
   }
 
   void _updatePosition() {
+    final myLocationRef = ref.read(locationProviders.notifier);
     positionStream = Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
+      accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 0,
       timeLimit: Duration(seconds: 10),
     )).listen((Position value) {
-      mapController.move(LatLng(value.latitude, value.longitude), 17);
+      LatLng latLng = LatLng(value.latitude, value.longitude);
+      mapController.move(latLng, 20);
 
       placemarkFromCoordinates(value.latitude, value.longitude).then((pos) {
-        setState(() {
-          locationInfo = pos[0].street!;
-        });
+        myLocationRef.updateMyPosition(value);
       });
-      setState(() {
-        position = value;
-      });
+      myLocationRef.updateMyCoordinate(latLng);
+      print('${value.latitude} ${value.longitude}');
     });
   }
 
@@ -72,11 +75,30 @@ class _MapPositionWidgetState extends State<MapPositionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    LatLng? latLng;
-    if (position != null) {
-      latLng = LatLng(position!.latitude, position!.longitude);
-    } else {
-      latLng = const LatLng(-8.335732, 116.215203);
+    const LatLng defaultLatLng = LatLng(-8.335732, 116.215203);
+    LatLng? latLngOpd;
+    final myCoordinate = ref.watch(locationProviders).myCoordinate;
+
+    List<Marker> markers = [];
+    if (myCoordinate != null) {
+      markers.add(Marker(
+          point: myCoordinate,
+          child: const Icon(
+            Icons.person_pin,
+            color: Colors.red,
+          )));
+    }
+
+    final opd = ref.watch(settingsProviders).user!.opd;
+    if (opd!.latLng != null) {
+      latLngOpd =
+          LatLng(opd.latLng!.coordinates!.last, opd.latLng!.coordinates!.first);
+      markers.add(Marker(
+          point: latLngOpd,
+          child: const Icon(
+            Icons.location_on,
+            color: Colors.blue,
+          )));
     }
     return Column(
       children: [
@@ -93,19 +115,21 @@ class _MapPositionWidgetState extends State<MapPositionWidget> {
               child: FlutterMap(
                   mapController: mapController,
                   options: MapOptions(
-                    initialCenter: latLng,
-                    initialZoom: 18,
+                    initialCenter: myCoordinate ?? defaultLatLng,
+                    initialZoom: 20,
                   ),
                   children: [
                     openStreetMapTileLayer,
-                    MarkerLayer(alignment: Alignment.center, markers: [
-                      Marker(
-                          point: latLng,
-                          child: const Icon(
-                            Icons.location_pin,
-                            color: Colors.red,
-                          ))
-                    ]),
+                    MarkerLayer(alignment: Alignment.center, markers: markers),
+                    CircleLayer(
+                      circles: [
+                        CircleMarker(
+                            point: latLngOpd!,
+                            radius: 10,
+                            useRadiusInMeter: true,
+                            color: Colors.blue.withOpacity(0.3)),
+                      ],
+                    ),
                   ])),
         ),
         Row(
@@ -121,13 +145,15 @@ class _MapPositionWidgetState extends State<MapPositionWidget> {
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                "Lokasi Anda: $locationInfo",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              )
+              (myCoordinate != null)
+                  ? Text(
+                      "Lokasi Anda: ${myCoordinate.latitude} - ${myCoordinate.longitude}",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  : const SizedBox(),
             ])
       ],
     );

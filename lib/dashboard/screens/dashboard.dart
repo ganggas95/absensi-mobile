@@ -15,15 +15,15 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         body: SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(top: 48, bottom: 40),
+        padding: EdgeInsets.only(top: 48, bottom: 40),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Column(
+              Column(
                 children: [
                   DashboardWelcomeWidget(),
                   DateTimeWidget(),
@@ -33,39 +33,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   AttendanceActionWidget(),
                 ],
               ),
-              const SizedBox(
+              SizedBox(
                 height: 40,
               ),
-              const Text(
-                "Atau",
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton.icon(
-                      label: const Text(
-                        "Ajukan Izin",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      icon: const Icon(
-                        Icons.back_hand,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background,
-                      )),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const MapPositionWidget(),
+              // const Text(
+              //   "Atau",
+              //   style: TextStyle(color: Colors.white70, fontSize: 16),
+              // ),
+              // const SizedBox(
+              //   height: 40,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     ElevatedButton.icon(
+              //         label: const Text(
+              //           "Ajukan Izin",
+              //           style: TextStyle(color: Colors.black),
+              //         ),
+              //         icon: const Icon(
+              //           Icons.back_hand,
+              //           color: Colors.black,
+              //         ),
+              //         onPressed: () {},
+              //         style: ElevatedButton.styleFrom(
+              //           backgroundColor:
+              //               Theme.of(context).colorScheme.background,
+              //         )),
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              MapPositionWidget(),
             ]),
       ),
     ));
