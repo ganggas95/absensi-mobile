@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:sitampan_mobile/providers/settings_providers.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class CardProfileWidget extends ConsumerStatefulWidget {
   const CardProfileWidget({super.key});
@@ -14,18 +14,23 @@ class _CardProfileWidgetState extends ConsumerState<CardProfileWidget> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(settingsProviders).user;
+    if (user == null) {
+      return const SizedBox();
+    }
+
+    print(user.lastLogin);
+
     String lastLogin = '';
-    if (user != null) {
+    if (user.lastLogin != null) {
       lastLogin =
           timeago.format(user.lastLogin!, allowFromNow: true, locale: 'id');
     }
-
     return Card(
       child: Column(children: [
         ListTile(
           leading: const Icon(Icons.person),
           title: Text(
-            user!.username!,
+            user.username ?? "",
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!
@@ -73,7 +78,7 @@ class _CardProfileWidgetState extends ConsumerState<CardProfileWidget> {
         ListTile(
           leading: const Icon(Icons.diversity_3),
           title: Text(
-            user.group!.name!,
+            user.group!.name ?? "-",
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!

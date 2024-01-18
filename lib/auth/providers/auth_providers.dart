@@ -43,6 +43,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
           .read(settingsProviders)
           .sharedPreferences
           .setString("token", response.data!.token!);
+
       ref
           .read(settingsProviders)
           .sharedPreferences

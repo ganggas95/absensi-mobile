@@ -56,7 +56,6 @@ class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
         myLocationRef.updateMyPosition(value);
       });
       myLocationRef.updateMyCoordinate(latLng);
-      print('${value.latitude} ${value.longitude}');
     });
   }
 

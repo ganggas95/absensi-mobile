@@ -7,25 +7,25 @@ part of 'user.dart';
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      accessKepang: json['accessKepang'] as bool?,
-      accessSenteg: json['accessSenteg'] as bool?,
-      accessSimpeg: json['accessSimpeg'] as bool?,
+      accessKepang: json['access_kepang'] as bool?,
+      accessSenteg: json['access_senteg'] as bool?,
+      accessSimpeg: json['access_simpeg'] as bool?,
       active: json['active'] as bool?,
-      createdAt: json['createdAt'] == null
+      createdAt: json['created_at'] == null
           ? null
-          : DateTime.parse(json['createdAt'] as String),
+          : DateTime.parse(json['created_at'] as String),
       group: json['group'] == null
           ? null
           : Group.fromJson(json['group'] as Map<String, dynamic>),
       id: json['id'] as int?,
-      isAdminHelper: json['isAdminHelper'] as bool?,
-      isAdminLocal: json['isAdminLocal'] as bool?,
-      isAdminOpd: json['isAdminOpd'] as bool?,
-      isSuperAdmin: json['isSuperAdmin'] as bool?,
-      lastLogin: json['lastLogin'] == null
+      isAdminHelper: json['is_admin_helper'] as bool?,
+      isAdminLocal: json['is_admin_local'] as bool?,
+      isAdminOpd: json['is_admin_opd'] as bool?,
+      isSuperAdmin: json['is_super_admin'] as bool?,
+      lastLogin: json['last_login'] == null
           ? null
-          : DateTime.parse(json['lastLogin'] as String),
-      loginFrom: json['loginFrom'],
+          : DateTime.parse(json['last_login'] as String),
+      loginFrom: json['login_from'],
       opd: json['opd'] == null
           ? null
           : Opd.fromJson(json['opd'] as Map<String, dynamic>),
@@ -33,29 +33,29 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           ? null
           : UnitKerja.fromJson(json['unit'] as Map<String, dynamic>),
       update: json['update'] as bool?,
-      updatedAt: json['updatedAt'] == null
+      updatedAt: json['updated_at'] == null
           ? null
-          : DateTime.parse(json['updatedAt'] as String),
+          : DateTime.parse(json['updated_at'] as String),
       username: json['username'] as String?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'accessKepang': instance.accessKepang,
-      'accessSenteg': instance.accessSenteg,
-      'accessSimpeg': instance.accessSimpeg,
+      'access_kepang': instance.accessKepang,
+      'access_senteg': instance.accessSenteg,
+      'access_simpeg': instance.accessSimpeg,
       'active': instance.active,
-      'createdAt': instance.createdAt?.toIso8601String(),
+      'created_at': instance.createdAt?.toIso8601String(),
       'group': instance.group,
       'id': instance.id,
-      'isAdminHelper': instance.isAdminHelper,
-      'isAdminLocal': instance.isAdminLocal,
-      'isAdminOpd': instance.isAdminOpd,
-      'isSuperAdmin': instance.isSuperAdmin,
-      'lastLogin': instance.lastLogin?.toIso8601String(),
-      'loginFrom': instance.loginFrom,
+      'is_admin_helper': instance.isAdminHelper,
+      'is_admin_local': instance.isAdminLocal,
+      'is_admin_opd': instance.isAdminOpd,
+      'is_super_admin': instance.isSuperAdmin,
+      'last_login': instance.lastLogin?.toIso8601String(),
+      'login_from': instance.loginFrom,
       'opd': instance.opd,
       'unit': instance.unit,
       'update': instance.update,
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
       'username': instance.username,
     };

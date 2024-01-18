@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sitampan_mobile/attendance/providers/attendance_providers.dart';
 import 'package:sitampan_mobile/dashboard/widgets/attendance_action.dart';
+import 'package:sitampan_mobile/dashboard/widgets/attendance_info.dart';
 import 'package:sitampan_mobile/dashboard/widgets/dashboard_welcome.dart';
 import 'package:sitampan_mobile/dashboard/widgets/datetime_widget.dart';
 import 'package:sitampan_mobile/dashboard/widgets/map_position.dart';
@@ -14,7 +16,43 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
+  void initState() {
+    super.initState();
+
+    final attendanceProvider = ref.read(attendanceProviders.notifier);
+    _streamAttendance(attendanceProvider);
+    _fetchTodayAtt(attendanceProvider);
+  }
+
+  void _streamAttendance(AttendanceStateNotifier provider) {
+    provider.streamAttendanceToday();
+  }
+
+  void _fetchTodayAtt(AttendanceStateNotifier provider) async {
+    await provider.fetchAttendanceToday();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final loading = ref.read(attendanceProviders).isLoading;
+    if (loading != null && loading) {
+      return Scaffold(
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: const Text(
+                "Loading...!",
+                textAlign: TextAlign.justify,
+                style: TextStyle(color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      );
+    }
     return const Scaffold(
         body: SingleChildScrollView(
       child: Padding(
@@ -27,6 +65,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 children: [
                   DashboardWelcomeWidget(),
                   DateTimeWidget(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  AttendanceInfoWidget(),
                   SizedBox(
                     height: 20,
                   ),

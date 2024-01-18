@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:sitampan_mobile/dashboard/dto/attendance_dto.dart';
-import 'package:sitampan_mobile/dashboard/providers/dashboard_providers.dart';
+import 'package:sitampan_mobile/attendance/dto/attendance_dto.dart';
+import 'package:sitampan_mobile/attendance/providers/attendance_providers.dart';
 import 'package:sitampan_mobile/location/providers/location_providers.dart';
 
 class AttendanceActionWidget extends ConsumerStatefulWidget {
@@ -27,7 +27,7 @@ class _AttendanceActionWidgetState
     final myLocationWithinOfficeLocation =
         ref.watch(locationProviders.notifier).myLocationWithinOfficeLocation;
     if (myLocationWithinOfficeLocation) {
-      ref.read(dashboardProviders.notifier).sendAttendance(CreateAttendanceDTO(
+      ref.read(attendanceProviders.notifier).sendAttendance(CreateAttendanceDTO(
           lat: myCoordinate!.latitude, lng: myCoordinate.longitude));
     } else {
       ScaffoldMessenger.of(context).clearSnackBars();
@@ -39,6 +39,7 @@ class _AttendanceActionWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final attendance = ref.watch(attendanceProviders).todayAtt;
     return InkWell(
       onTap: onTabAttend,
       child: Container(
@@ -59,15 +60,18 @@ class _AttendanceActionWidgetState
             Theme.of(context).primaryColor.withOpacity(0.9)
           ], begin: Alignment.topRight, end: Alignment.bottomLeft),
         ),
-        child: const Column(
+        child: Column(
           children: [
-            Icon(
+            const Icon(
               Icons.pan_tool_alt,
               size: 32,
               color: Colors.white,
             ),
-            Text("Masuk",
-                style: TextStyle(
+            Text(
+                attendance != null && attendance.checkIn != null
+                    ? "Keluar"
+                    : "Masuk",
+                style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.white))
