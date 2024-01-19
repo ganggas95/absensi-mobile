@@ -32,6 +32,8 @@ class User {
   final bool? isAdminOpd;
   @JsonKey(name: 'is_super_admin')
   final bool? isSuperAdmin;
+  @JsonKey(name: 'is_user_regular')
+  final bool? isUserRegular;
   @JsonKey(name: 'last_login')
   final DateTime? lastLogin;
   @JsonKey(name: 'login_from')
@@ -59,6 +61,7 @@ class User {
     this.isAdminLocal,
     this.isAdminOpd,
     this.isSuperAdmin,
+    this.isUserRegular,
     this.lastLogin,
     this.loginFrom,
     this.opd,
@@ -70,7 +73,6 @@ class User {
 
   @override
   String toString() {
-    // TODO: Before encoding json make sure the DateTime converted to string
     return json.encode(this);
   }
 
@@ -90,6 +92,7 @@ class User {
     bool? isAdminLocal,
     bool? isAdminOpd,
     bool? isSuperAdmin,
+    bool? isUserRegular,
     DateTime? lastLogin,
     dynamic loginFrom,
     Opd? opd,
@@ -110,6 +113,7 @@ class User {
       isAdminLocal: isAdminLocal ?? this.isAdminLocal,
       isAdminOpd: isAdminOpd ?? this.isAdminOpd,
       isSuperAdmin: isSuperAdmin ?? this.isSuperAdmin,
+      isUserRegular: isUserRegular ?? this.isUserRegular,
       lastLogin: lastLogin ?? this.lastLogin,
       loginFrom: loginFrom ?? this.loginFrom,
       opd: opd ?? this.opd,
@@ -141,6 +145,7 @@ class User {
       isAdminLocal.hashCode ^
       isAdminOpd.hashCode ^
       isSuperAdmin.hashCode ^
+      isUserRegular.hashCode ^
       lastLogin.hashCode ^
       loginFrom.hashCode ^
       opd.hashCode ^

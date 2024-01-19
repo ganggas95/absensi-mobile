@@ -13,42 +13,58 @@ class AttendanceInfoWidget extends ConsumerStatefulWidget {
 }
 
 class _AttendanceInfoWidgetState extends ConsumerState<AttendanceInfoWidget> {
-  Widget buildAttendanceWidget(AttendanceRecord att, String label) {
-    const TextStyle textStyle = TextStyle(color: Colors.white, fontSize: 14);
-    return Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(label, style: textStyle),
-          Text(
-            att.timestamp != null
-                ? DateFormat("HH:mm:ss").format(att.timestamp!)
-                : "-",
-            style: textStyle,
-          )
-        ]);
+  Widget buildAttendanceWidget(AttendanceRecord? att, String label) {
+    const TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 14);
+    String timeAtt = '-';
+    if (att != null && att.timestamp != null) {
+      timeAtt = DateFormat("HH:mm:ss").format(att.timestamp!);
+    }
+    String status = "-";
+    if (att != null && att.status != null) {
+      status = att.status ?? "-";
+    }
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 2.5,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(label, textAlign: TextAlign.center, style: textStyle),
+            Text(timeAtt, textAlign: TextAlign.center, style: textStyle),
+            Text(status, textAlign: TextAlign.center, style: textStyle),
+          ]),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final attendance = ref.watch(attendanceProviders).todayAtt;
-    Widget? attCheckin;
-    Widget? attCheckout;
-    if (attendance != null && attendance.checkIn != null) {
-      attCheckin = buildAttendanceWidget(attendance.checkIn!, 'Masuk:');
-    }
-    if (attendance != null && attendance.checkOut != null) {
-      attCheckout = buildAttendanceWidget(attendance.checkOut!, 'Keluar:');
-    }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      textBaseline: TextBaseline.ideographic,
-      children: [
-        attCheckin ?? const SizedBox(),
-        attCheckout ?? const SizedBox(),
-      ],
+    return Card(
+      elevation: 10,
+      color: Colors.white,
+      clipBehavior: Clip.none,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+      child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Text("data")
+              buildAttendanceWidget(attendance?.checkIn, 'Masuk'),
+              // separator with grey
+              Container(
+                color: Colors.grey,
+                width: 1,
+                height: 50,
+              ),
+              buildAttendanceWidget(attendance?.checkOut, 'Keluar')
+            ],
+          )),
     );
   }
 }

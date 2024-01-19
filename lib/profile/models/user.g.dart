@@ -22,6 +22,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       isAdminLocal: json['is_admin_local'] as bool?,
       isAdminOpd: json['is_admin_opd'] as bool?,
       isSuperAdmin: json['is_super_admin'] as bool?,
+      isUserRegular: json['is_user_regular'] as bool?,
       lastLogin: json['last_login'] == null
           ? null
           : DateTime.parse(json['last_login'] as String),
@@ -51,6 +52,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'is_admin_local': instance.isAdminLocal,
       'is_admin_opd': instance.isAdminOpd,
       'is_super_admin': instance.isSuperAdmin,
+      'is_user_regular': instance.isUserRegular,
       'last_login': instance.lastLogin?.toIso8601String(),
       'login_from': instance.loginFrom,
       'opd': instance.opd,

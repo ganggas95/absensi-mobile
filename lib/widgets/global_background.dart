@@ -22,6 +22,9 @@ class GlobalBackgroundWidget extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
+                // Colors.black38,
+                // Colors.black54,
+
                 Colors.black38,
                 Colors.black54,
               ],

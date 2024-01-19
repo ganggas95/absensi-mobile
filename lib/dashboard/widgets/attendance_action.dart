@@ -23,6 +23,8 @@ class _AttendanceActionWidgetState
   }
 
   void onTabAttend() {
+    final loading = ref.read(attendanceProviders).isLoading;
+    if (loading != null && loading) return;
     final myCoordinate = ref.watch(locationProviders).myCoordinate;
     final myLocationWithinOfficeLocation =
         ref.watch(locationProviders.notifier).myLocationWithinOfficeLocation;

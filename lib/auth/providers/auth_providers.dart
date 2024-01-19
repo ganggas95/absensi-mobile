@@ -12,48 +12,56 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       : super(AuthState(data: {
           AuthField.username: "",
           AuthField.password: "",
-        }, errors: null));
+        }, errors: null, loading: false));
 
   void setUsername(String username) {
     state = AuthState(data: {
       ...?state.data,
       AuthField.username: username,
-    }, errors: null);
+    }, errors: null, loading: false);
   }
 
   void setPassword(String password) {
     state = AuthState(data: {
       ...?state.data,
       AuthField.password: password,
-    }, errors: null);
+    }, errors: null, loading: false);
   }
 
   Future<bool> login() async {
+    state = AuthState(data: state.data, errors: state.errors, loading: true);
     BaseResponse<AuthResponse?> response =
         await _authService.login(AuthDTO.fromJson(state.data!));
+    // Simulate time sleep
+    // await Future.delayed(const Duration(seconds: 5));
     if (response.data != null) {
-      state = AuthState(
-        data: {
+      if (response.data!.user!.isUserRegular!) {
+        ref
+            .read(settingsProviders)
+            .sharedPreferences
+            .setString("token", response.data!.token!);
+
+        ref
+            .read(settingsProviders)
+            .sharedPreferences
+            .setString("user", response.data!.user!.toString());
+
+        state = AuthState(data: {
           AuthField.username: "",
           AuthField.password: "",
-        },
-        errors: null,
-      );
-      ref
-          .read(settingsProviders)
-          .sharedPreferences
-          .setString("token", response.data!.token!);
+        }, errors: null, loading: false);
+        return true;
+      }
 
-      ref
-          .read(settingsProviders)
-          .sharedPreferences
-          .setString("user", response.data!.user!.toString());
-      return true;
+      state = AuthState(
+          data: state.data,
+          errors: "Aplikasi ini hanya boleh digunakan oleh pegawai!",
+          loading: false);
     } else if (response.errors != null) {
       state = AuthState(
-        data: state.data,
-        errors: "Username dan password salah",
-      );
+          data: state.data,
+          errors: "Username dan password salah",
+          loading: false);
     }
     return false;
   }

@@ -8,7 +8,8 @@ enum AuthField { username, password }
 class AuthState {
   final Map<AuthField, String>? data;
   final String? errors;
-  AuthState({required this.data, this.errors});
+  final bool loading;
+  AuthState({required this.data, this.errors, this.loading = false});
 }
 
 @JsonSerializable()
