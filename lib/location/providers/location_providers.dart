@@ -21,7 +21,10 @@ class LocationStateNotifier extends StateNotifier<MyLocationState> {
 
   bool get myLocationWithinOfficeLocation {
     final opd = ref.watch(settingsProviders).user!.opd;
-    if (opd != null && state.myCoordinate != null) {
+    if (opd == null || opd.latLng == null) {
+      return false;
+    }
+    if (state.myCoordinate != null) {
       return isCoordinateInsideRadius(
         opd.latLng!.coordinates!.last,
         opd.latLng!.coordinates!.first,

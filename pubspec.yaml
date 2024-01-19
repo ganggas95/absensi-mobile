@@ -55,6 +55,7 @@ dependencies:
   json_serializable: ^6.7.1
   random_avatar: ^0.0.8
   timeago: ^3.6.0
+  universal_html: ^2.2.4
 
 dev_dependencies:
   flutter_test:

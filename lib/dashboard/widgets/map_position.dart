@@ -18,7 +18,7 @@ class MapPositionWidget extends ConsumerStatefulWidget {
 }
 
 class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
-  final mapController = MapController();
+  final MapController mapController = MapController();
   Position? position;
   String locationInfo = '';
   late StreamSubscription<Position> positionStream;
@@ -43,6 +43,7 @@ class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
 
   void _updatePosition() {
     final myLocationRef = ref.read(locationProviders.notifier);
+    // if (_isOpdLocationNotExist()) return;
     positionStream = Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
@@ -50,13 +51,14 @@ class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
       timeLimit: Duration(seconds: 10),
     )).listen((Position value) {
       LatLng latLng = LatLng(value.latitude, value.longitude);
-      mapController.move(latLng, 20);
+      if (!_isOpdLocationNotExist()) {
+        mapController.move(latLng, 20);
+      }
 
       placemarkFromCoordinates(value.latitude, value.longitude).then((pos) {
         myLocationRef.updateMyPosition(value);
       });
       myLocationRef.updateMyCoordinate(latLng);
-      print('${value.latitude} ${value.longitude}');
     });
   }
 
@@ -73,10 +75,26 @@ class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
     super.dispose();
   }
 
+  bool _isOpdLocationNotExist() {
+    final opd = ref.watch(settingsProviders).user!.opd;
+    return opd == null || opd.latLng == null;
+  }
+
   @override
   Widget build(BuildContext context) {
     const LatLng defaultLatLng = LatLng(-8.335732, 116.215203);
     LatLng? latLngOpd;
+
+    final opd = ref.watch(settingsProviders).user!.opd;
+    if (_isOpdLocationNotExist()) {
+      return const Card(
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: Text("Lokasi OPD tidak ditemukan"),
+        ),
+      );
+    }
+
     final myCoordinate = ref.watch(locationProviders).myCoordinate;
 
     List<Marker> markers = [];
@@ -88,11 +106,9 @@ class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
             color: Colors.red,
           )));
     }
-
-    final opd = ref.watch(settingsProviders).user!.opd;
-    if (opd!.latLng != null) {
-      latLngOpd =
-          LatLng(opd.latLng!.coordinates!.last, opd.latLng!.coordinates!.first);
+    if (!_isOpdLocationNotExist()) {
+      latLngOpd = LatLng(
+          opd!.latLng!.coordinates!.last, opd.latLng!.coordinates!.first);
       markers.add(Marker(
           point: latLngOpd,
           child: const Icon(
@@ -131,6 +147,9 @@ class _MapPositionWidgetState extends ConsumerState<MapPositionWidget> {
                       ],
                     ),
                   ])),
+        ),
+        const SizedBox(
+          height: 20,
         ),
         Row(
             mainAxisSize: MainAxisSize.max,

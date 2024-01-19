@@ -12,18 +12,15 @@ class DateTimeWidget extends ConsumerStatefulWidget {
 }
 
 class _DateTimeWidgetState extends ConsumerState<DateTimeWidget> {
-  String _currentTime = '';
-  String _currentDate = '';
+  DateTime _currentTime = DateTime.now();
 
   late Timer timer;
 
   @override
   void initState() {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final DateTime now = DateTime.now();
       setState(() {
-        _currentTime = DateFormat().addPattern('HH:MM:ss').format(now);
-        _currentDate = DateFormat.yMMMMEEEEd().format(now);
+        _currentTime = DateTime.now();
       });
     });
     super.initState();
@@ -42,9 +39,9 @@ class _DateTimeWidgetState extends ConsumerState<DateTimeWidget> {
       crossAxisAlignment: CrossAxisAlignment.center,
       textBaseline: TextBaseline.ideographic,
       children: [
-        Text(_currentTime,
+        Text(DateFormat("HH:mm:ss").format(_currentTime),
             style: const TextStyle(fontSize: 24, color: Colors.white)),
-        Text(_currentDate,
+        Text(DateFormat.yMMMMEEEEd().format(_currentTime),
             style: const TextStyle(fontSize: 14, color: Colors.white)),
       ],
     );

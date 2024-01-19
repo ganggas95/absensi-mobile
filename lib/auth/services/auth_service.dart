@@ -8,7 +8,7 @@ class AuthService with ServiceMixin {
     try {
       final response = await post(
         '/service/v1/auth',
-        payload.toJson(),
+        body: payload.toJson(),
       );
       return BaseResponse<AuthResponse?>.fromJson(response, (Object? r) {
         return r != null

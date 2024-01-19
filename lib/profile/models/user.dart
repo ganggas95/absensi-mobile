@@ -10,41 +10,43 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class User {
-  // @JsonKey(name: 'access_kepang')
+  @JsonKey(name: 'access_kepang')
   final bool? accessKepang;
-  // @JsonKey(name: 'access_senteg')
+  @JsonKey(name: 'access_senteg')
   final bool? accessSenteg;
-  // @JsonKey(name: 'access_simpeg')
+  @JsonKey(name: 'access_simpeg')
   final bool? accessSimpeg;
-  // @JsonKey(name: 'active')
+  @JsonKey(name: 'active')
   final bool? active;
-  // @JsonKey(name: 'created_at')
+  @JsonKey(name: 'created_at')
   final DateTime? createdAt;
-  // @JsonKey(name: 'group')
+  @JsonKey(name: 'group')
   final Group? group;
-  // @JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   final int? id;
-  // @JsonKey(name: 'is_admin_helper')
+  @JsonKey(name: 'is_admin_helper')
   final bool? isAdminHelper;
-  // @JsonKey(name: 'is_admin_local')
+  @JsonKey(name: 'is_admin_local')
   final bool? isAdminLocal;
-  // @JsonKey(name: 'is_admin_opd')
+  @JsonKey(name: 'is_admin_opd')
   final bool? isAdminOpd;
-  // @JsonKey(name: 'is_super_admin')
+  @JsonKey(name: 'is_super_admin')
   final bool? isSuperAdmin;
-  // @JsonKey(name: 'last_login')
+  @JsonKey(name: 'is_user_regular')
+  final bool? isUserRegular;
+  @JsonKey(name: 'last_login')
   final DateTime? lastLogin;
-  // @JsonKey(name: 'login_from')
+  @JsonKey(name: 'login_from')
   final dynamic loginFrom;
-  // @JsonKey(name: 'opd')
+  @JsonKey(name: 'opd')
   final Opd? opd;
-  // @JsonKey(name: 'unit')
+  @JsonKey(name: 'unit')
   final UnitKerja? unit;
-  // @JsonKey(name: 'update')
+  @JsonKey(name: 'update')
   final bool? update;
-  // @JsonKey(name: 'updated_at')
+  @JsonKey(name: 'updated_at')
   final DateTime? updatedAt;
-  // @JsonKey(name: 'username')
+  @JsonKey(name: 'username')
   final String? username;
 
   const User({
@@ -59,6 +61,7 @@ class User {
     this.isAdminLocal,
     this.isAdminOpd,
     this.isSuperAdmin,
+    this.isUserRegular,
     this.lastLogin,
     this.loginFrom,
     this.opd,
@@ -70,7 +73,6 @@ class User {
 
   @override
   String toString() {
-    // TODO: Before encoding json make sure the DateTime converted to string
     return json.encode(this);
   }
 
@@ -90,6 +92,7 @@ class User {
     bool? isAdminLocal,
     bool? isAdminOpd,
     bool? isSuperAdmin,
+    bool? isUserRegular,
     DateTime? lastLogin,
     dynamic loginFrom,
     Opd? opd,
@@ -110,6 +113,7 @@ class User {
       isAdminLocal: isAdminLocal ?? this.isAdminLocal,
       isAdminOpd: isAdminOpd ?? this.isAdminOpd,
       isSuperAdmin: isSuperAdmin ?? this.isSuperAdmin,
+      isUserRegular: isUserRegular ?? this.isUserRegular,
       lastLogin: lastLogin ?? this.lastLogin,
       loginFrom: loginFrom ?? this.loginFrom,
       opd: opd ?? this.opd,
@@ -141,6 +145,7 @@ class User {
       isAdminLocal.hashCode ^
       isAdminOpd.hashCode ^
       isSuperAdmin.hashCode ^
+      isUserRegular.hashCode ^
       lastLogin.hashCode ^
       loginFrom.hashCode ^
       opd.hashCode ^

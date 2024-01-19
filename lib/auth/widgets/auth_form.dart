@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sitampan_mobile/auth/providers/auth_providers.dart';
 import 'package:sitampan_mobile/screens/authenticated_screen.dart';
+import 'package:sitampan_mobile/widgets/loading_indicators.dart';
 
 class AuthFormWidget extends ConsumerStatefulWidget {
   const AuthFormWidget({super.key});
@@ -13,6 +14,7 @@ class AuthFormWidget extends ConsumerStatefulWidget {
 class _AuthFormWidgetState extends ConsumerState<AuthFormWidget> {
   final _formKey = GlobalKey<FormState>();
 
+  final MaterialStatesController buttonController = MaterialStatesController();
   void _goToDashboard() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) {
       return const AuthenticatedScreen();
@@ -93,6 +95,7 @@ class _AuthFormWidgetState extends ConsumerState<AuthFormWidget> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
+                        if (authState.loading) return;
                         _submit();
                       },
                       style: ElevatedButton.styleFrom(
@@ -100,11 +103,18 @@ class _AuthFormWidgetState extends ConsumerState<AuthFormWidget> {
                           elevation: 1,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           minimumSize: const Size(double.infinity, 0)),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
+                      child: authState.loading
+                          ? const LoadingIndicators(
+                              width: 20,
+                              height: 20,
+                              strokeWidth: 1,
+                            )
+                          : const Text(
+                              "Login",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
                     ),
                     authState.errors != null
                         ? Container(
